@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+  <title>筋トレメニュー選定 - 今日のYouTube筋トレルーレット</title>
+  <meta name="description" content="迷わずすぐ動ける！厳選YouTubeプレイリストから今日の筋トレメニューをランダムに選定して再生するPWA。iPhoneホーム画面追加に対応。">
+
+  <!-- PWA & Mobile Web App Settings -->
+  <meta name="theme-color" content="#080c14">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="筋トレ選定">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="icon" type="image/svg+xml" href="icons/favicon.svg">
+  <link rel="manifest" href="manifest.webmanifest">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="header-top-row">
+        <div class="logo-badge">
+          <img src="icons/favicon.svg" alt="App Icon" class="logo-icon">
+          <span class="badge-text">Daily Workout Roulette</span>
+        </div>
+        <button type="button" id="btnOpenManageModal" class="btn-manage-trigger" aria-label="動画リストの管理">
+          <span aria-hidden="true">⚙️</span>
+          <span>動画を管理</span>
+        </button>
+      </div>
+      <h1 class="app-title">筋トレメニュー選定</h1>
+      <p class="app-description">迷ったら回すだけ！今日のトレーニングメニューをランダム選定</p>
+    </header>
+
+    <!-- Main Workout Action Card -->
+    <main class="workout-card">
+      <!-- Initial State (Before Pick) -->
+      <section id="emptyState" class="empty-state">
+        <div class="empty-icon-wrapper" aria-hidden="true">⚡</div>
+        <h2 class="empty-headline">今日のメニューを決めよう</h2>
+        <p class="empty-subtext">ボタンを押すと、プレイリストから今日の筋トレ動画をランダムに1本選出します。</p>
+        <button type="button" id="btnPickInitial" class="btn-primary" aria-label="今日の筋トレメニューをランダムに選ぶ">
+          <span>今日のメニューを選ぶ</span>
+          <span aria-hidden="true">🎲</span>
+        </button>
+      </section>
+
+      <!-- Video Selected State -->
+      <section id="videoStage" class="video-stage hidden" aria-live="polite">
+        <div class="video-tags">
+          <span id="videoCategory" class="tag-badge tag-category">全身・体幹</span>
+          <span id="videoDuration" class="tag-badge tag-duration">約5分</span>
+        </div>
+
+        <h2 id="videoTitle" class="video-title">動画タイトル</h2>
+
+        <!-- YouTube Embed Player -->
+        <div class="player-container">
+          <iframe
+            id="youtubePlayer"
+            src=""
+            title="YouTube workout video player"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+            loading="lazy"
+          ></iframe>
+        </div>
+
+        <!-- Secondary Action Buttons -->
+        <div class="action-group">
+          <div class="secondary-actions-row">
+            <button type="button" id="btnPickAgain" class="btn-primary" aria-label="別のメニューを選び直す">
+              <span>別のメニューにする</span>
+              <span aria-hidden="true">🔄</span>
+            </button>
+            <a id="linkOpenYoutube" href="#" target="_blank" rel="noopener noreferrer" class="btn-secondary" aria-label="YouTubeアプリまたはブラウザで開く">
+              <span>YouTubeで開く</span>
+              <span aria-hidden="true">↗</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Shuffling Roulette Animation Overlay -->
+      <div id="rouletteOverlay" class="roulette-overlay hidden" aria-hidden="true">
+        <div class="roulette-spinner"></div>
+        <span class="roulette-label">Selecting Workout...</span>
+        <div id="rouletteTicker" class="roulette-title-ticker"></div>
+      </div>
+    </main>
+
+    <!-- Playlist Drawer / Accordion -->
+    <nav class="playlist-accordion" aria-label="プレイリスト一覧">
+      <details>
+        <summary class="accordion-summary">
+          <span style="display: flex; align-items: center; gap: 6px;">
+            <span aria-hidden="true">📋</span>
+            <span>メニュー一覧</span>
+          </span>
+          <span style="display: flex; align-items: center; gap: 8px;">
+            <span id="playlistCount" class="badge-text" style="color: var(--text-dim); text-transform: none;">収録: 6本</span>
+            <span class="accordion-icon" aria-hidden="true">▼</span>
+          </span>
+        </summary>
+        <div id="playlistItems" class="playlist-items">
+          <!-- Dynamically populated from videos.js -->
+        </div>
+      </details>
+    </nav>
+
+    <!-- Video Management Modal -->
+    <div id="manageModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-backdrop" id="modalBackdrop"></div>
+      <div class="modal-card">
+        <div class="modal-header">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span aria-hidden="true" style="font-size: 1.2rem;">⚙️</span>
+            <h2 id="modalTitle" class="modal-title">動画リストの管理</h2>
+          </div>
+          <button type="button" id="btnCloseManageModal" class="btn-modal-close" aria-label="閉じる">✕</button>
+        </div>
+
+        <div class="modal-body">
+          <!-- Add Video Form -->
+          <form id="addVideoForm" class="add-video-form">
+            <h3 class="form-section-title">新規動画の追加</h3>
+            <div class="form-group">
+              <label for="inputVideoUrl" class="form-label">YouTube URL または 動画ID <span class="required">*</span></label>
+              <input type="text" id="inputVideoUrl" class="form-input" placeholder="例: https://youtu.be/xxxxxx または ID" required>
+            </div>
+
+            <div class="form-group">
+              <label for="inputVideoTitle" class="form-label">タイトル <span class="required">*</span></label>
+              <input type="text" id="inputVideoTitle" class="form-input" placeholder="例: 10分 腹筋サーキット" required>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="inputVideoCategory" class="form-label">部位・ジャンル</label>
+                <input type="text" id="inputVideoCategory" class="form-input" placeholder="例: 腹筋, 全身, 脚">
+              </div>
+              <div class="form-group">
+                <label for="inputVideoDuration" class="form-label">目安時間</label>
+                <input type="text" id="inputVideoDuration" class="form-input" placeholder="例: 5分, 10分">
+              </div>
+            </div>
+
+            <button type="submit" id="btnAddVideo" class="btn-primary" style="padding: 12px 16px; font-size: 0.95rem;">
+              <span>リストに追加する</span>
+              <span aria-hidden="true">➕</span>
+            </button>
+          </form>
+
+          <!-- Current Video List -->
+          <div class="manage-list-section">
+            <div class="manage-list-header">
+              <h3 class="form-section-title" id="manageListTitle">登録中の動画</h3>
+              <button type="button" id="btnResetVideos" class="btn-reset-link" title="初期プレイリスト（6本）に戻します">
+                初期リストに戻す
+              </button>
+            </div>
+            <div id="manageVideoList" class="manage-video-list">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer & PWA Tips -->
+    <footer class="app-footer">
+      <div class="pwa-tip">
+        💡 <strong>iPhoneの方へ:</strong> Safari下部の「共有」ボタン（四角から矢印）→「ホーム画面に追加」をタップすると、アプリのようにワンタップで起動できます。
+      </div>
+    </footer>
+  </div>
+
+  <!-- Scripts: videos.js (Single Source of Truth) then app.js -->
+  <script src="js/videos.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
