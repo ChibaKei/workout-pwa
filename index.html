@@ -57,22 +57,14 @@
       <!-- Video Selected State -->
       <section id="videoStage" class="video-stage hidden" aria-live="polite">
         <div class="video-tags">
-          <span id="videoCategory" class="tag-badge tag-category">全身・体幹</span>
-          <span id="videoDuration" class="tag-badge tag-duration">約5分</span>
+          <span id="videoDuration" class="tag-badge tag-duration">⏱️ -分</span>
         </div>
 
         <h2 id="videoTitle" class="video-title">動画タイトル</h2>
 
         <!-- YouTube Embed Player -->
         <div class="player-container">
-          <iframe
-            id="youtubePlayer"
-            src=""
-            title="YouTube workout video player"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowfullscreen
-            loading="lazy"
-          ></iframe>
+          <div id="playerHost"></div>
         </div>
 
         <!-- Secondary Action Buttons -->
@@ -130,28 +122,26 @@
         </div>
 
         <div class="modal-body">
-          <!-- Add Video Form -->
+          <!-- Add Video Form (URL paste only - title & duration auto fetched) -->
           <form id="addVideoForm" class="add-video-form">
             <h3 class="form-section-title">新規動画の追加</h3>
             <div class="form-group">
-              <label for="inputVideoUrl" class="form-label">YouTube URL または 動画ID <span class="required">*</span></label>
-              <input type="text" id="inputVideoUrl" class="form-input" placeholder="例: https://youtu.be/xxxxxx または ID" required>
+              <label for="inputVideoUrl" class="form-label">YouTube URL <span class="required">*</span></label>
+              <div class="url-input-container">
+                <input type="text" id="inputVideoUrl" class="form-input" placeholder="YouTube URLまたは共有リンクを貼付" required autocomplete="off">
+                <button type="button" id="btnPasteUrl" class="btn-paste" title="クリップボードから貼り付け">
+                  <span aria-hidden="true">📋</span>
+                  <span>貼付</span>
+                </button>
+              </div>
+              <div id="urlFeedback" class="url-feedback hidden"></div>
             </div>
 
             <div class="form-group">
-              <label for="inputVideoTitle" class="form-label">タイトル <span class="required">*</span></label>
-              <input type="text" id="inputVideoTitle" class="form-input" placeholder="例: 10分 腹筋サーキット" required>
-            </div>
-
-            <div class="form-row">
-              <div class="form-group">
-                <label for="inputVideoCategory" class="form-label">部位・ジャンル</label>
-                <input type="text" id="inputVideoCategory" class="form-input" placeholder="例: 腹筋, 全身, 脚">
-              </div>
-              <div class="form-group">
-                <label for="inputVideoDuration" class="form-label">目安時間</label>
-                <input type="text" id="inputVideoDuration" class="form-input" placeholder="例: 5分, 10分">
-              </div>
+              <label for="inputVideoTitle" class="form-label">
+                タイトル <span class="label-hint">（自動取得されます）</span>
+              </label>
+              <input type="text" id="inputVideoTitle" class="form-input" placeholder="URL入力で自動取得（手動編集も可能）">
             </div>
 
             <button type="submit" id="btnAddVideo" class="btn-primary" style="padding: 12px 16px; font-size: 0.95rem;">
@@ -172,6 +162,35 @@
               <!-- Dynamically populated -->
             </div>
           </div>
+
+          <!-- Backup / Import Accordion -->
+          <details class="backup-accordion">
+            <summary class="backup-summary">
+              <span>📦 バックアップ / 一括取り込み</span>
+              <span class="accordion-icon" aria-hidden="true">▼</span>
+            </summary>
+            <div class="backup-content">
+              <p class="backup-hint">
+                登録リストをクリップボードにコピーして保存したり、複数URLやJSONを貼り付けて一括取り込みできます。
+              </p>
+              <div class="backup-actions">
+                <button type="button" id="btnExportData" class="btn-secondary" style="padding: 8px 12px; font-size: 0.82rem;">
+                  <span>📋 データをコピー</span>
+                </button>
+                <button type="button" id="btnToggleImport" class="btn-secondary" style="padding: 8px 12px; font-size: 0.82rem;">
+                  <span>📥 一括取り込みを開く</span>
+                </button>
+              </div>
+              <div id="importArea" class="import-area hidden">
+                <textarea id="importTextarea" class="form-input import-textarea" rows="3" placeholder="エクスポートしたJSON、またはYouTube URL（改行区切りで複数可）を貼り付け"></textarea>
+                <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 8px;">
+                  <button type="button" id="btnExecuteImport" class="btn-primary" style="padding: 8px 14px; font-size: 0.85rem; width: auto;">
+                    <span>取り込む</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </details>
         </div>
       </div>
     </div>
@@ -184,6 +203,8 @@
     </footer>
   </div>
 
+  <!-- YouTube IFrame Player API -->
+  <script src="https://www.youtube.com/iframe_api"></script>
   <!-- Scripts: videos.js (Single Source of Truth) then app.js -->
   <script src="js/videos.js"></script>
   <script src="js/app.js"></script>

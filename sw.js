@@ -1,4 +1,4 @@
-const CACHE_NAME = 'workout-pwa-v1';
+const CACHE_NAME = 'workout-pwa-v2';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -41,8 +41,8 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
 
-  // Bypass YouTube API, iframes, and external tracking
-  if (url.origin.includes('youtube') || url.origin.includes('googlevideo') || url.origin.includes('ytimg') || url.origin.includes('fonts.googleapis') || url.origin.includes('fonts.gstatic')) {
+  // Bypass YouTube API, iframes, oEmbed, and external fonts
+  if (url.origin.includes('youtube') || url.origin.includes('googlevideo') || url.origin.includes('ytimg') || url.origin.includes('noembed') || url.origin.includes('fonts.googleapis') || url.origin.includes('fonts.gstatic')) {
     return;
   }
 

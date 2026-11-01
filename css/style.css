@@ -283,6 +283,8 @@ body {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
 }
 
+.player-container #playerHost,
+.player-container #playerHost iframe,
 .player-container iframe {
   position: absolute;
   top: 0;
@@ -555,7 +557,7 @@ details[open] .accordion-icon {
   position: relative;
   z-index: 101;
   width: 100%;
-  max-width: 560px;
+  max-width: 580px;
   max-height: 88vh;
   background: #111726;
   border: 1px solid var(--border-color);
@@ -578,7 +580,7 @@ details[open] .accordion-icon {
     align-items: flex-end;
   }
   .modal-card {
-    max-height: 92vh;
+    max-height: 94vh;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
     padding-bottom: max(16px, env(safe-area-inset-bottom));
@@ -589,7 +591,7 @@ details[open] .accordion-icon {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 18px 20px;
+  padding: 16px 20px;
   border-bottom: 1px solid var(--border-color);
   background: rgba(255, 255, 255, 0.02);
 }
@@ -621,12 +623,12 @@ details[open] .accordion-icon {
 }
 
 .modal-body {
-  padding: 20px;
+  padding: 18px 20px 24px;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 20px;
 }
 
 /* Modal Form */
@@ -656,10 +658,69 @@ details[open] .accordion-icon {
   font-size: 0.78rem;
   font-weight: 600;
   color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 .form-label .required {
   color: #ff512f;
+  margin-left: 2px;
+}
+
+.label-hint {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  font-weight: 400;
+  margin-left: 6px;
+}
+
+.url-input-container {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.btn-paste {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  color: var(--text-main);
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all var(--transition-fast);
+}
+
+.btn-paste:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.btn-paste:active {
+  transform: scale(0.96);
+}
+
+.url-feedback {
+  font-size: 0.75rem;
+  padding: 4px 2px;
+  color: #38bdf8;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.url-feedback.is-error {
+  color: #f87171;
+}
+
+.url-feedback.is-success {
+  color: #34d399;
 }
 
 .form-input {
@@ -728,45 +789,112 @@ details[open] .accordion-icon {
 .manage-video-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  max-height: 260px;
+  gap: 10px;
+  max-height: 290px;
   overflow-y: auto;
+  padding-right: 2px;
 }
 
 .manage-video-item {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 10px 12px;
+  padding: 8px 10px;
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-sm);
-  gap: 12px;
+  gap: 10px;
+  transition: background var(--transition-fast), border-color var(--transition-fast);
+}
+
+.manage-video-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.manage-video-thumb {
+  width: 64px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 4px;
+  background: #000;
+  flex-shrink: 0;
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .manage-video-info {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 3px;
   flex: 1;
   min-width: 0;
 }
 
 .manage-video-title {
-  font-size: 0.84rem;
+  font-size: 0.83rem;
   font-weight: 600;
   color: var(--text-main);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+.manage-video-title:hover {
+  color: #38bdf8;
 }
 
 .manage-video-meta {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   color: var(--text-dim);
+  flex-wrap: wrap;
+}
+
+.manage-video-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.btn-action-play {
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: #34d399;
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.btn-action-play:hover {
+  background: rgba(16, 185, 129, 0.28);
+  color: #ffffff;
+}
+
+.btn-action-play:active {
+  transform: scale(0.96);
+}
+
+.btn-action-edit {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+  padding: 6px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.btn-action-edit:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--text-main);
 }
 
 .btn-delete-video {
@@ -798,8 +926,70 @@ details[open] .accordion-icon {
   box-shadow: 0 0 12px rgba(239, 68, 68, 0.5);
 }
 
+/* Backup & Restore Accordion */
+.backup-accordion {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.backup-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  cursor: pointer;
+  user-select: none;
+  list-style: none;
+}
+
+.backup-summary::-webkit-details-marker {
+  display: none;
+}
+
+.backup-summary:hover {
+  color: var(--text-main);
+}
+
+.backup-content {
+  padding: 12px 14px;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.backup-hint {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  line-height: 1.45;
+}
+
+.backup-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.import-area {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.import-textarea {
+  min-height: 75px;
+  font-size: 0.78rem;
+  font-family: monospace;
+  resize: vertical;
+}
+
 /* Hidden Utility */
 .hidden {
   display: none !important;
 }
-
