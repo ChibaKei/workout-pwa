@@ -1,4 +1,4 @@
-const CACHE_NAME = 'workout-pwa-v3';
+const CACHE_NAME = 'workout-pwa-v4';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -15,14 +15,15 @@ const ASSETS_TO_CACHE = [
 
 // Install: Cache essential app shell
 self.addEventListener('install', (event) => {
+  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       return cache.addAll(ASSETS_TO_CACHE);
-    }).then(() => self.skipWaiting())
+    })
   );
 });
 
-// Activate: Clean up old caches
+// Activate: Clean up old caches immediately
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) => {
@@ -37,7 +38,7 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Fetch: Serve cached assets, fallback to network
+// Fetch: Network First (常に最新を取得し、オフライン時のみキャッシュを使用)
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
 
@@ -47,19 +48,19 @@ self.addEventListener('fetch', (event) => {
   }
 
   event.respondWith(
-    caches.match(event.request).then((cachedResponse) => {
-      if (cachedResponse) {
-        // Fetch in background to revalidate cache (stale-while-revalidate)
-        fetch(event.request).then((networkResponse) => {
-          if (networkResponse && networkResponse.status === 200) {
-            caches.open(CACHE_NAME).then((cache) => {
-              cache.put(event.request, networkResponse);
-            });
-          }
-        }).catch(() => {/* Offline fallback */});
-        return cachedResponse;
-      }
-      return fetch(event.request);
-    })
+    fetch(event.request)
+      .then((networkResponse) => {
+        if (networkResponse && networkResponse.status === 200) {
+          const responseToCache = networkResponse.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(event.request, responseToCache);
+          });
+        }
+        return networkResponse;
+      })
+      .catch(() => {
+        // オフライン時のフォールバック
+        return caches.match(event.request);
+      })
   );
 });
