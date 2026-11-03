@@ -1,11 +1,3 @@
-/**
- * 筋トレ動画プレイリスト（Single Source of Truth）
- *
- * 【動画の追加・編集】
- * - id: YouTube動画ID
- * - title: 動画タイトル
- * - duration: 再生時間
- */
 window.DEFAULT_WORKOUT_VIDEOS = [
   {
     id: "6p4K9HWTi20",
@@ -39,5 +31,4 @@ window.DEFAULT_WORKOUT_VIDEOS = [
   }
 ];
 
-// 初期設定のフォールバック
 window.WORKOUT_VIDEOS = window.DEFAULT_WORKOUT_VIDEOS;

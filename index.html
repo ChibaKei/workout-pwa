@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
-  <title>筋トレメニュー選定 - 今日のYouTube筋トレルーレット</title>
-  <meta name="description" content="迷わずすぐ動ける！厳選YouTubeプレイリストから今日の筋トレメニューをランダムに選定して再生するPWA。iPhoneホーム画面追加に対応。">
+  <title>筋トレメニュー選定</title>
 
   <!-- PWA & Mobile Web App Settings -->
   <meta name="theme-color" content="#080c14">
@@ -29,16 +28,15 @@
     <header class="app-header">
       <div class="header-top-row">
         <div class="logo-badge">
-          <img src="icons/favicon.svg" alt="App Icon" class="logo-icon">
-          <span class="badge-text">Daily Workout Roulette</span>
+          <img src="icons/favicon.svg" alt="" class="logo-icon">
+          <span class="badge-text">Workout</span>
         </div>
-        <button type="button" id="btnOpenManageModal" class="btn-manage-trigger" aria-label="動画リストの管理">
+        <button type="button" id="btnOpenManageModal" class="btn-manage-trigger">
           <span aria-hidden="true">⚙️</span>
-          <span>動画を管理</span>
+          <span>動画管理</span>
         </button>
       </div>
       <h1 class="app-title">筋トレメニュー選定</h1>
-      <p class="app-description">迷ったら回すだけ！今日のトレーニングメニューをランダム選定</p>
     </header>
 
     <!-- Main Workout Action Card -->
@@ -46,21 +44,19 @@
       <!-- Initial State (Before Pick) -->
       <section id="emptyState" class="empty-state">
         <div class="empty-icon-wrapper" aria-hidden="true">⚡</div>
-        <h2 class="empty-headline">今日のメニューを決めよう</h2>
-        <p class="empty-subtext">ボタンを押すと、プレイリストから今日の筋トレ動画をランダムに1本選出します。</p>
-        <button type="button" id="btnPickInitial" class="btn-primary" aria-label="今日の筋トレメニューをランダムに選ぶ">
-          <span>今日のメニューを選ぶ</span>
+        <button type="button" id="btnPickInitial" class="btn-primary">
+          <span>メニューを選ぶ</span>
           <span aria-hidden="true">🎲</span>
         </button>
       </section>
 
       <!-- Video Selected State -->
-      <section id="videoStage" class="video-stage hidden" aria-live="polite">
+      <section id="videoStage" class="video-stage hidden">
         <div class="video-tags">
           <span id="videoDuration" class="tag-badge tag-duration">⏱️ -分</span>
         </div>
 
-        <h2 id="videoTitle" class="video-title">動画タイトル</h2>
+        <h2 id="videoTitle" class="video-title"></h2>
 
         <!-- YouTube Embed Player -->
         <div class="player-container">
@@ -70,11 +66,11 @@
         <!-- Secondary Action Buttons -->
         <div class="action-group">
           <div class="secondary-actions-row">
-            <button type="button" id="btnPickAgain" class="btn-primary" aria-label="別のメニューを選び直す">
+            <button type="button" id="btnPickAgain" class="btn-primary">
               <span>別のメニューにする</span>
               <span aria-hidden="true">🔄</span>
             </button>
-            <a id="linkOpenYoutube" href="#" target="_blank" rel="noopener noreferrer" class="btn-secondary" aria-label="YouTubeアプリまたはブラウザで開く">
+            <a id="linkOpenYoutube" href="#" target="_blank" rel="noopener noreferrer" class="btn-secondary">
               <span>YouTubeで開く</span>
               <span aria-hidden="true">↗</span>
             </a>
@@ -85,13 +81,12 @@
       <!-- Shuffling Roulette Animation Overlay -->
       <div id="rouletteOverlay" class="roulette-overlay hidden" aria-hidden="true">
         <div class="roulette-spinner"></div>
-        <span class="roulette-label">Selecting Workout...</span>
         <div id="rouletteTicker" class="roulette-title-ticker"></div>
       </div>
     </main>
 
     <!-- Playlist Drawer / Accordion -->
-    <nav class="playlist-accordion" aria-label="プレイリスト一覧">
+    <nav class="playlist-accordion">
       <details>
         <summary class="accordion-summary">
           <span style="display: flex; align-items: center; gap: 6px;">
@@ -99,13 +94,11 @@
             <span>メニュー一覧</span>
           </span>
           <span style="display: flex; align-items: center; gap: 8px;">
-            <span id="playlistCount" class="badge-text" style="color: var(--text-dim); text-transform: none;">収録: 6本</span>
+            <span id="playlistCount" class="badge-text" style="color: var(--text-dim); text-transform: none;"></span>
             <span class="accordion-icon" aria-hidden="true">▼</span>
           </span>
         </summary>
-        <div id="playlistItems" class="playlist-items">
-          <!-- Dynamically populated from videos.js -->
-        </div>
+        <div id="playlistItems" class="playlist-items"></div>
       </details>
     </nav>
 
@@ -116,20 +109,19 @@
         <div class="modal-header">
           <div style="display: flex; align-items: center; gap: 8px;">
             <span aria-hidden="true" style="font-size: 1.2rem;">⚙️</span>
-            <h2 id="modalTitle" class="modal-title">動画リストの管理</h2>
+            <h2 id="modalTitle" class="modal-title">動画管理</h2>
           </div>
           <button type="button" id="btnCloseManageModal" class="btn-modal-close" aria-label="閉じる">✕</button>
         </div>
 
         <div class="modal-body">
-          <!-- Add Video Form (URL paste only - title & duration auto fetched) -->
+          <!-- Add Video Form -->
           <form id="addVideoForm" class="add-video-form">
-            <h3 class="form-section-title">新規動画の追加</h3>
             <div class="form-group">
-              <label for="inputVideoUrl" class="form-label">YouTube URL <span class="required">*</span></label>
+              <label for="inputVideoUrl" class="form-label">YouTube URL</label>
               <div class="url-input-container">
-                <input type="text" id="inputVideoUrl" class="form-input" placeholder="YouTube URLまたは共有リンクを貼付" required autocomplete="off">
-                <button type="button" id="btnPasteUrl" class="btn-paste" title="クリップボードから貼り付け">
+                <input type="text" id="inputVideoUrl" class="form-input" placeholder="URLを貼り付け" required autocomplete="off">
+                <button type="button" id="btnPasteUrl" class="btn-paste">
                   <span aria-hidden="true">📋</span>
                   <span>貼付</span>
                 </button>
@@ -138,14 +130,12 @@
             </div>
 
             <div class="form-group">
-              <label for="inputVideoTitle" class="form-label">
-                タイトル <span class="label-hint">（自動取得されます）</span>
-              </label>
-              <input type="text" id="inputVideoTitle" class="form-input" placeholder="URL入力で自動取得（手動編集も可能）">
+              <label for="inputVideoTitle" class="form-label">タイトル</label>
+              <input type="text" id="inputVideoTitle" class="form-input" placeholder="自動取得（編集可）">
             </div>
 
             <button type="submit" id="btnAddVideo" class="btn-primary" style="padding: 12px 16px; font-size: 0.95rem;">
-              <span>リストに追加する</span>
+              <span>追加する</span>
               <span aria-hidden="true">➕</span>
             </button>
           </form>
@@ -154,58 +144,20 @@
           <div class="manage-list-section">
             <div class="manage-list-header">
               <h3 class="form-section-title" id="manageListTitle">登録中の動画</h3>
-              <button type="button" id="btnResetVideos" class="btn-reset-link" title="初期プレイリスト（6本）に戻します">
+              <button type="button" id="btnResetVideos" class="btn-reset-link">
                 初期リストに戻す
               </button>
             </div>
-            <div id="manageVideoList" class="manage-video-list">
-              <!-- Dynamically populated -->
-            </div>
+            <div id="manageVideoList" class="manage-video-list"></div>
           </div>
-
-          <!-- Backup / Import Accordion -->
-          <details class="backup-accordion">
-            <summary class="backup-summary">
-              <span>📦 バックアップ / 一括取り込み</span>
-              <span class="accordion-icon" aria-hidden="true">▼</span>
-            </summary>
-            <div class="backup-content">
-              <p class="backup-hint">
-                登録リストをクリップボードにコピーして保存したり、複数URLやJSONを貼り付けて一括取り込みできます。
-              </p>
-              <div class="backup-actions">
-                <button type="button" id="btnExportData" class="btn-secondary" style="padding: 8px 12px; font-size: 0.82rem;">
-                  <span>📋 データをコピー</span>
-                </button>
-                <button type="button" id="btnToggleImport" class="btn-secondary" style="padding: 8px 12px; font-size: 0.82rem;">
-                  <span>📥 一括取り込みを開く</span>
-                </button>
-              </div>
-              <div id="importArea" class="import-area hidden">
-                <textarea id="importTextarea" class="form-input import-textarea" rows="3" placeholder="エクスポートしたJSON、またはYouTube URL（改行区切りで複数可）を貼り付け"></textarea>
-                <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 8px;">
-                  <button type="button" id="btnExecuteImport" class="btn-primary" style="padding: 8px 14px; font-size: 0.85rem; width: auto;">
-                    <span>取り込む</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </details>
         </div>
       </div>
     </div>
-
-    <!-- Footer & PWA Tips -->
-    <footer class="app-footer">
-      <div class="pwa-tip">
-        💡 <strong>iPhoneの方へ:</strong> Safari下部の「共有」ボタン（四角から矢印）→「ホーム画面に追加」をタップすると、アプリのようにワンタップで起動できます。
-      </div>
-    </footer>
   </div>
 
   <!-- YouTube IFrame Player API -->
   <script src="https://www.youtube.com/iframe_api"></script>
-  <!-- Scripts: videos.js (Single Source of Truth) then app.js -->
+  <!-- Scripts: videos.js then app.js -->
   <script src="js/videos.js"></script>
   <script src="js/app.js"></script>
 </body>

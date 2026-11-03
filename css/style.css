@@ -148,11 +148,7 @@ body {
   margin-bottom: 6px;
 }
 
-.app-description {
-  font-size: 0.88rem;
-  color: var(--text-muted);
-  line-height: 1.4;
-}
+
 
 /* Main Workout Card */
 .workout-card {
@@ -210,17 +206,9 @@ body {
   50% { transform: translateY(-6px); }
 }
 
-.empty-headline {
-  font-size: 1.15rem;
-  font-weight: 700;
-  color: var(--text-main);
-}
 
-.empty-subtext {
-  font-size: 0.85rem;
-  color: var(--text-dim);
-  max-width: 320px;
-}
+
+
 
 /* Video Stage Area (Active when selected) */
 .video-stage {
@@ -336,13 +324,7 @@ body {
   max-width: 420px;
 }
 
-.roulette-label {
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: #f97316;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
+
 
 /* Buttons & Interactive Elements */
 .action-group {
@@ -508,28 +490,7 @@ details[open] .accordion-icon {
   white-space: nowrap;
 }
 
-/* Footer & Tips */
-.app-footer {
-  text-align: center;
-  padding: 12px 4px 8px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
 
-.pwa-tip {
-  font-size: 0.78rem;
-  color: var(--text-dim);
-  line-height: 1.4;
-  padding: 8px 12px;
-  background: rgba(255, 255, 255, 0.02);
-  border-radius: var(--radius-sm);
-  border: 1px solid rgba(255, 255, 255, 0.04);
-}
-
-.pwa-tip strong {
-  color: #cbd5e1;
-}
 
 /* ==========================================================
    Management Modal & Bottom Sheet (Mobile First)
@@ -668,12 +629,7 @@ details[open] .accordion-icon {
   margin-left: 2px;
 }
 
-.label-hint {
-  font-size: 0.72rem;
-  color: var(--text-dim);
-  font-weight: 400;
-  margin-left: 6px;
-}
+
 
 .url-input-container {
   display: flex;
@@ -790,9 +746,6 @@ details[open] .accordion-icon {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  max-height: 290px;
-  overflow-y: auto;
-  padding-right: 2px;
 }
 
 .manage-video-item {
@@ -924,69 +877,6 @@ details[open] .accordion-icon {
   color: #ffffff;
   border-color: #dc2626;
   box-shadow: 0 0 12px rgba(239, 68, 68, 0.5);
-}
-
-/* Backup & Restore Accordion */
-.backup-accordion {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
-  overflow: hidden;
-}
-
-.backup-summary {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 14px;
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: var(--text-muted);
-  cursor: pointer;
-  user-select: none;
-  list-style: none;
-}
-
-.backup-summary::-webkit-details-marker {
-  display: none;
-}
-
-.backup-summary:hover {
-  color: var(--text-main);
-}
-
-.backup-content {
-  padding: 12px 14px;
-  border-top: 1px solid var(--border-color);
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.backup-hint {
-  font-size: 0.75rem;
-  color: var(--text-dim);
-  line-height: 1.45;
-}
-
-.backup-actions {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.import-area {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-top: 4px;
-}
-
-.import-textarea {
-  min-height: 75px;
-  font-size: 0.78rem;
-  font-family: monospace;
-  resize: vertical;
 }
 
 /* Hidden Utility */
